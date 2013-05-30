@@ -1,7 +1,7 @@
 #ifndef BDM_H
 #define BDM_H
 
-#include <QMainWindow>
+ #include <QMainWindow>
 
 namespace Ui {
     class BDM;
