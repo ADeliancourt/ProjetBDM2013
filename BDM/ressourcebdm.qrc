@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/BDM">
         <file>fantôme1BDM.jpg</file>
-        <file>fantôme3BDM.jpg</file>
+        <file alias="Bannière">fantôme3BDM.jpg</file>
+        <file>Icon.jpg</file>
     </qresource>
 </RCC>

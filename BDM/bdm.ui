@@ -445,7 +445,7 @@
   </property>
   <property name="windowIcon">
    <iconset resource="ressourcebdm.qrc">
-    <normaloff>:/BDM/fantôme1BDM.jpg</normaloff>:/BDM/fantôme1BDM.jpg</iconset>
+    <normaloff>:/BDM/Icon.jpg</normaloff>:/BDM/Icon.jpg</iconset>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QTabWidget" name="tabWidgetLoc">
@@ -885,7 +885,7 @@
      </palette>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="Loc">
      <attribute name="title">
@@ -1374,9 +1374,9 @@
            </property>
            <property name="date">
             <date>
-             <year>2000</year>
-             <month>1</month>
-             <day>1</day>
+             <year>1999</year>
+             <month>12</month>
+             <day>31</day>
             </date>
            </property>
            <property name="currentSection">
@@ -1455,14 +1455,14 @@
              <second>0</second>
              <year>2013</year>
              <month>4</month>
-             <day>3</day>
+             <day>2</day>
             </datetime>
            </property>
            <property name="date">
             <date>
              <year>2013</year>
              <month>4</month>
-             <day>3</day>
+             <day>2</day>
             </date>
            </property>
            <property name="currentSection">
@@ -1997,6 +1997,9 @@
            </attribute>
            <attribute name="horizontalHeaderStretchLastSection">
             <bool>true</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
            </attribute>
            <attribute name="verticalHeaderMinimumSectionSize">
             <number>20</number>

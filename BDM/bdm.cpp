@@ -37,18 +37,18 @@ BDM::BDM(QWidget *parent) :
     ui->dateEditArrive->setDate(QDate::currentDate());
 
     //tableau de recherche
-    modelRecherche.setQuery("select libCli,telECli,telPCli,melCli from Client");
-    //ui->tableViewRecherche->setModel(&modelRecherche);
+    modelRecherche.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client");
+    ui->tableViewRecherche->setModel(&modelRecherche);
     ui->tableViewRecherche->resizeColumnsToContents();
     ui->tableViewRecherche->resizeRowsToContents();
-    modelRecherche.setHeaderData(0, Qt::Horizontal, tr("Société"));
-    modelRecherche.setHeaderData(1, Qt::Horizontal, tr("Téléphone fixe"));
-    modelRecherche.setHeaderData(2, Qt::Horizontal, tr("Portable"));
-    modelRecherche.setHeaderData(3, Qt::Horizontal, tr("Adresse mail"));
-
+    modelRecherche.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelRecherche.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelRecherche.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelRecherche.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelRecherche.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
     //tableau de Client passif
     modelClientPassif.setQuery("select libCli,telECli,telPCli,melCli from Client where typCli=2");
-    //ui->tableViewCliPassif->setModel(&modelClientPassif);
+    ui->tableViewCliPassif->setModel(&modelClientPassif);
     ui->tableViewCliPassif->resizeColumnsToContents();
     ui->tableViewCliPassif->resizeRowsToContents();
     modelClientPassif.setHeaderData(0, Qt::Horizontal, tr("Société"));
@@ -60,11 +60,9 @@ BDM::BDM(QWidget *parent) :
     connect(ui->lineEditNum,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
     connect(ui->lineEditNom,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
     connect(ui->lineEditTel,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
-    //ui->comboBoxCat->setModel(modelCategorie);
+    ui->comboBoxCat->setModel(modelCategorie);
     ui->comboBoxCat->setModelColumn(1);
     QString talcan=ui->comboBoxCat->currentText();
-  /*  if(talcan=="Literie")
-{*/
     QString reqProd = "select libProd from Produit inner join Categorie on catProd=numCat where libCat=\""+talcan+"\"";
     // exécution de la requête
     QSqlQuery reqExProd(reqProd,baseBDM);
@@ -74,26 +72,9 @@ BDM::BDM(QWidget *parent) :
     // boucle pour remplir ma comboBox
     while(reqExProd.next())
     {
-        //ui->comboBoxProd->addItem(reqExProd.value(0).toString(),i);
+        ui->comboBoxProd->addItem(reqExProd.value(0).toString(),i);
         i++;
     }
-/*}
-   if(talcan=="Eponge")
-    {
-        QString reqProd = "select libProd from Produit inner join Categorie on catProd=numCat where libCat=\"Eponge\"";
-        // exécution de la requête
-        QSqlQuery reqExProd(reqProd,baseBDM);
-        // compteur de lignes
-        int i = 0;
-        reqExProd.exec();
-        // boucle pour remplir ma comboBox
-        while(reqExProd.next())
-        {
-            ui->comboBoxProd->addItem(reqExProd.value(0).toString(),i);
-            i++;
-        }
-    }*/
-
 }
 
 BDM::~BDM()
@@ -144,7 +125,7 @@ void BDM::on_action_Location_triggered()
     modelProduit->setHeaderData(5, Qt::Horizontal, tr("Prix"));
     modelProduit->setHeaderData(6, Qt::Horizontal, tr("Catégorie"));
     modelProduit->setHeaderData(7, Qt::Horizontal, tr("Taille"));
-    //ui->tableViewStk->setModel(modelProduit);
+    ui->tableViewStk->setModel(modelProduit);
     ui->tableViewStk->show();
     ui->tabWidgetLoc->setCurrentIndex(0);
     ui->tableViewStk->resizeColumnsToContents();
@@ -160,7 +141,7 @@ void BDM::on_action_Location_triggered()
     modelClient->setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelClient->setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
     modelClient->setHeaderData(5, Qt::Horizontal, tr("Type"));
-    //ui->tableViewCliActif->setModel(modelClient);
+    ui->tableViewCliActif->setModel(modelClient);
     ui->tableViewCliActif->show();
     ui->tabWidgetLoc->setCurrentIndex(0);
     ui->tableViewCliActif->resizeColumnsToContents();
@@ -169,7 +150,7 @@ void BDM::on_action_Location_triggered()
     {
     ui->comboBoxTaille->setEnabled(true);
     }
-   // ui->comboBoxTaille->setModel(modelTaille);
+    ui->comboBoxTaille->setModel(modelTaille);
     ui->comboBoxTaille->setModelColumn(1);
 }
 
