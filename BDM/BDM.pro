@@ -11,8 +11,14 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        bdm.cpp
+        bdm.cpp \
+    dialognewclient.cpp
 
-HEADERS  += bdm.h
+HEADERS  += bdm.h \
+    dialognewclient.h
 
-FORMS    += bdm.ui
+FORMS    += bdm.ui \
+    dialognewclient.ui
+
+RESOURCES += \
+    ressourcebdm.qrc
