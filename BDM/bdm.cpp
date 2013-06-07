@@ -46,15 +46,16 @@ BDM::BDM(QWidget *parent) :
     modelRecherche.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
     modelRecherche.setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelRecherche.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
-    //tableau de Client passif
-    modelClientPassif.setQuery("select libCli,telECli,telPCli,melCli from Client where typCli=2");
-    ui->tableViewCliPassif->setModel(&modelClientPassif);
-    ui->tableViewCliPassif->resizeColumnsToContents();
-    ui->tableViewCliPassif->resizeRowsToContents();
-    modelClientPassif.setHeaderData(0, Qt::Horizontal, tr("Société"));
-    modelClientPassif.setHeaderData(1, Qt::Horizontal, tr("Téléphone fixe"));
-    modelClientPassif.setHeaderData(2, Qt::Horizontal, tr("Portable"));
-    modelClientPassif.setHeaderData(3, Qt::Horizontal, tr("Adresse mail"));
+    //tableau de Client récapitulatif
+    modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client");
+    ui->tableViewCli->setModel(&modelClientRecap);
+    ui->tableViewCli->resizeColumnsToContents();
+    ui->tableViewCli->resizeRowsToContents();
+    modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
 
     //les connexions des signaux aux slots correspondants
     connect(ui->lineEditNum,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
@@ -141,10 +142,10 @@ void BDM::on_action_Location_triggered()
     modelClient->setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelClient->setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
     modelClient->setHeaderData(5, Qt::Horizontal, tr("Type"));
-    ui->tableViewCliActif->setModel(modelClient);
-    ui->tableViewCliActif->show();
+    /*ui->tableViewCli->setModel(modelClient);
+    ui->tableViewCli->show();*/
     ui->tabWidgetLoc->setCurrentIndex(0);
-    ui->tableViewCliActif->resizeColumnsToContents();
+   // ui->tableViewCli->resizeColumnsToContents();
     QString talcan=ui->comboBoxCat->currentText();
     if(talcan=="Maillot")
     {
@@ -227,13 +228,42 @@ void BDM::on_pushButtonAjoutProd_clicked()
     int numeroProdOk=maRequete.value(0).toInt();
     newProd.setValue("numProd",numeroProdOk);
 }
-
-void BDM::on_pushButtonDesactCli_clicked()
+void BDM::on_radioButtonTout_clicked()
 {
-
+    modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client");
+    ui->tableViewCli->setModel(&modelClientRecap);
+    modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
 }
 
-void BDM::on_pushButtonActCli_clicked()
+void BDM::on_radioButtonActif_clicked()
 {
+    modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client where typCli=1");
+    ui->tableViewCli->setModel(&modelClientRecap);
+    modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+}
 
+void BDM::on_radioButtonPassif_clicked()
+{
+    modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client where typCli=2");
+    ui->tableViewCli->setModel(&modelClientRecap);
+    modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+}
+//ne marche pas encore
+void BDM::on_pushButtonDesactCli_clicked()
+{
+    int talcanInt = ui->tableViewCli->selectionModel()->currentIndex().row();
+    modelClientRecap.setQuery("update Client set typCli=2 where numCli="+talcanInt);
+    ui->tableViewCli->setModel(&modelClientRecap);
 }

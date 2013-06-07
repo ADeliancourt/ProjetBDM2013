@@ -31,9 +31,13 @@ private slots:
 
     void on_pushButtonAjoutProd_clicked();
 
-    void on_pushButtonDesactCli_clicked();
+    void on_radioButtonTout_clicked();
 
-    void on_pushButtonActCli_clicked();
+    void on_radioButtonActif_clicked();
+
+    void on_radioButtonPassif_clicked();
+
+    void on_pushButtonDesactCli_clicked();
 
 private:
     Ui::BDM *ui;
@@ -42,8 +46,7 @@ private:
     QSqlTableModel * modelProduit;
     QSqlTableModel * modelTaille;
     QSqlTableModel * modelClient;
-    QComboBox      * comboBoxCat;
-    QSqlQueryModel   modelClientPassif;
+    QSqlQueryModel   modelClientRecap;
     QSqlQueryModel   modelRecherche;
     QSqlDatabase     baseBDM;
 };

@@ -885,7 +885,7 @@
      </palette>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="Loc">
      <attribute name="title">
@@ -1376,7 +1376,7 @@
             <date>
              <year>1999</year>
              <month>12</month>
-             <day>31</day>
+             <day>30</day>
             </date>
            </property>
            <property name="currentSection">
@@ -1455,14 +1455,14 @@
              <second>0</second>
              <year>2013</year>
              <month>4</month>
-             <day>2</day>
+             <day>1</day>
             </datetime>
            </property>
            <property name="date">
             <date>
              <year>2013</year>
              <month>4</month>
-             <day>2</day>
+             <day>1</day>
             </date>
            </property>
            <property name="currentSection">
@@ -2586,13 +2586,13 @@
      <attribute name="title">
       <string>Clients</string>
      </attribute>
-     <widget class="QWidget" name="layoutWidget">
+     <widget class="QWidget" name="">
       <property name="geometry">
        <rect>
         <x>11</x>
-        <y>21</y>
+        <y>11</y>
         <width>604</width>
-        <height>539</height>
+        <height>389</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_17">
@@ -2605,7 +2605,7 @@
              <property name="minimumSize">
               <size>
                <width>0</width>
-               <height>40</height>
+               <height>30</height>
               </size>
              </property>
              <property name="palette">
@@ -3108,7 +3108,7 @@
         </layout>
        </item>
        <item>
-        <layout class="QVBoxLayout" name="verticalLayout_16">
+        <layout class="QVBoxLayout" name="verticalLayout_10">
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_5">
            <item>
@@ -3131,7 +3131,7 @@
                <property name="minimumSize">
                 <size>
                  <width>0</width>
-                 <height>40</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="palette">
@@ -3181,7 +3181,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Actifs</string>
+                <string>Récapitulatif</string>
                </property>
               </widget>
              </item>
@@ -3243,7 +3243,7 @@
           </layout>
          </item>
          <item>
-          <widget class="QTableView" name="tableViewCliActif">
+          <widget class="QTableView" name="tableViewCli">
            <property name="minimumSize">
             <size>
              <width>600</width>
@@ -3253,7 +3253,7 @@
            <property name="maximumSize">
             <size>
              <width>600</width>
-             <height>140</height>
+             <height>16777215</height>
             </size>
            </property>
            <property name="alternatingRowColors">
@@ -3262,42 +3262,17 @@
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
            </property>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
           </widget>
          </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_12">
          <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButtonDesactCli">
-           <property name="text">
-            <string>&amp;Désactiver Client</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QVBoxLayout" name="verticalLayout_12">
-         <item>
-          <layout class="QVBoxLayout" name="verticalLayout_10">
+          <layout class="QHBoxLayout" name="horizontalLayout_12">
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_15">
+            <layout class="QHBoxLayout" name="horizontalLayout_8">
              <item>
-              <spacer name="horizontalSpacer_12">
+              <spacer name="horizontalSpacer_13">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -3310,171 +3285,101 @@
               </spacer>
              </item>
              <item>
-              <widget class="QLabel" name="label_18">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="palette">
-                <palette>
-                 <active>
-                  <colorrole role="WindowText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>129</red>
-                     <green>142</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </active>
-                 <inactive>
-                  <colorrole role="WindowText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>129</red>
-                     <green>142</green>
-                     <blue>255</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </inactive>
-                 <disabled>
-                  <colorrole role="WindowText">
-                   <brush brushstyle="SolidPattern">
-                    <color alpha="255">
-                     <red>94</red>
-                     <green>108</green>
-                     <blue>121</blue>
-                    </color>
-                   </brush>
-                  </colorrole>
-                 </disabled>
-                </palette>
-               </property>
-               <property name="font">
-                <font>
-                 <pointsize>14</pointsize>
-                 <weight>75</weight>
-                 <italic>true</italic>
-                 <bold>true</bold>
-                 <underline>true</underline>
-                </font>
-               </property>
-               <property name="text">
-                <string>Passifs</string>
-               </property>
-              </widget>
+              <layout class="QVBoxLayout" name="verticalLayout_12">
+               <item>
+                <widget class="QRadioButton" name="radioButtonTout">
+                 <property name="text">
+                  <string>Tous</string>
+                 </property>
+                 <property name="checked">
+                  <bool>true</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonActif">
+                 <property name="text">
+                  <string>Actif</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QRadioButton" name="radioButtonPassif">
+                 <property name="text">
+                  <string>Passif</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
              </item>
             </layout>
            </item>
            <item>
-            <widget class="Line" name="line_5">
-             <property name="enabled">
-              <bool>true</bool>
-             </property>
-             <property name="palette">
-              <palette>
-               <active>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>98</red>
-                   <green>109</green>
-                   <blue>193</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </active>
-               <inactive>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>98</red>
-                   <green>109</green>
-                   <blue>193</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </inactive>
-               <disabled>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>94</red>
-                   <green>108</green>
-                   <blue>121</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </disabled>
-              </palette>
-             </property>
-             <property name="frameShadow">
-              <enum>QFrame::Plain</enum>
-             </property>
-             <property name="lineWidth">
-              <number>2</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
+            <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <item>
+              <spacer name="horizontalSpacer_4">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_16">
+               <item>
+                <widget class="QPushButton" name="pushButtonDesactCli">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>&amp;Désactiver Client</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="pushButtonActCli">
+                 <property name="maximumSize">
+                  <size>
+                   <width>16777215</width>
+                   <height>24</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>&amp;Activer Client</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
            </item>
           </layout>
-         </item>
-         <item>
-          <widget class="QTableView" name="tableViewCliPassif">
-           <property name="minimumSize">
-            <size>
-             <width>600</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>600</width>
-             <height>140</height>
-            </size>
-           </property>
-           <property name="alternatingRowColors">
-            <bool>true</bool>
-           </property>
-           <property name="selectionBehavior">
-            <enum>QAbstractItemView::SelectRows</enum>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_16">
-         <item>
-          <spacer name="horizontalSpacer_13">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="pushButtonActCli">
-           <property name="text">
-            <string>&amp;Activer Client</string>
-           </property>
-          </widget>
          </item>
         </layout>
        </item>
       </layout>
      </widget>
+     <zorder>layoutWidget</zorder>
+     <zorder>pushButtonActCli</zorder>
+     <zorder>pushButtonDesactCli</zorder>
+     <zorder>horizontalSpacer_4</zorder>
+     <zorder>radioButtonActif</zorder>
+     <zorder>radioButtonPassif</zorder>
+     <zorder>radioButtonTout</zorder>
     </widget>
     <widget class="QWidget" name="tab">
      <attribute name="title">
