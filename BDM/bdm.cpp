@@ -374,8 +374,6 @@ void BDM::on_comboBoxCat_activated(const QString &arg1)
 
 void BDM::on_pushButtonAjoutPanierProd_clicked()
 {
-    //ne marche pas encore
-    //EN COURS
     modelLocation=new QSqlTableModel(this);
     modelLocation->setTable("Location");
     modelLocation->setEditStrategy(QSqlTableModel::OnRowChange);
@@ -406,8 +404,6 @@ void BDM::on_pushButtonAjoutPanierProd_clicked()
 
 void BDM::on_pushButtonActCli_clicked()
 {
-    //ne marche pas encore
-
     ui->comboBoxCli->setModelColumn(0);
     QSqlQuery reqDesact;
     reqDesact.prepare("update Client set typCli=1 where numCli=:id");
@@ -425,7 +421,6 @@ void BDM::on_pushButtonActCli_clicked()
 
 void BDM::on_pushButtonDesactCli_clicked()
 {
-    //ne marche pas encore
     ui->comboBoxCli->setModelColumn(0);
     //nouvelle version
     //preparation de la requete
