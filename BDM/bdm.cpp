@@ -61,20 +61,9 @@ BDM::BDM(QWidget *parent) :
     connect(ui->lineEditNum,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
     connect(ui->lineEditNom,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
     connect(ui->lineEditTel,SIGNAL(textChanged(QString)),this,SLOT(rechercheClient()));
-    ui->comboBoxCat->setModel(modelCategorie);
-    ui->comboBoxCat->setModelColumn(1);
-    QString talcan=ui->comboBoxCat->currentText();
-    QString reqProd = "select libProd from Produit inner join Categorie on catProd=numCat where libCat=\""+talcan+"\"";
-    // exécution de la requête
-    QSqlQuery reqExProd(reqProd,baseBDM);
-    // compteur de lignes
-    int i = 0;
-    reqExProd.exec();
-    // boucle pour remplir ma comboBox
-    while(reqExProd.next())
+    if (ui->dateEditArrive>ui->dateEditDepart)
     {
-        ui->comboBoxProd->addItem(reqExProd.value(0).toString(),i);
-        i++;
+    ui->dateEditArrive=ui->dateEditDepart;
     }
 }
 
@@ -105,15 +94,13 @@ void BDM::on_action_Quitter_triggered()
 
 void BDM::on_action_Location_triggered()
 {
-    modelCategorie = new QSqlRelationalTableModel(this,baseBDM);
-    modelCategorie->setTable("Categorie");
-    modelCategorie->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
-    modelCategorie->select();
+    //Taille
     modelTaille = new QSqlRelationalTableModel(this,baseBDM);
     modelTaille->setTable("Taille");
     modelTaille->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
     modelTaille->select();
 
+    //Produit
     modelProduit = new QSqlRelationalTableModel(this,baseBDM);
     modelProduit->setTable("Produit");
     modelProduit->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
@@ -131,7 +118,12 @@ void BDM::on_action_Location_triggered()
     ui->tabWidgetLoc->setCurrentIndex(0);
     ui->tableViewStk->resizeColumnsToContents();
 
-    //Client Actif
+    //Client en location
+    modelClientLoc.setQuery("select numCli,libCli from Client where numCli in (select numCli from Location)");
+    ui->comboBoxCliLoc->setModel(&modelClientLoc);
+    ui->comboBoxCliLoc->setModelColumn(1);
+
+    //Client
     modelClient = new QSqlRelationalTableModel(this,baseBDM);
     modelClient->setTable("Client");
     modelClient->setEditStrategy(QSqlRelationalTableModel::OnRowChange);
@@ -142,17 +134,11 @@ void BDM::on_action_Location_triggered()
     modelClient->setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelClient->setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
     modelClient->setHeaderData(5, Qt::Horizontal, tr("Type"));
-    /*ui->tableViewCli->setModel(modelClient);
-    ui->tableViewCli->show();*/
-    ui->tabWidgetLoc->setCurrentIndex(0);
-   // ui->tableViewCli->resizeColumnsToContents();
-    QString talcan=ui->comboBoxCat->currentText();
-    if(talcan=="Maillot")
-    {
-    ui->comboBoxTaille->setEnabled(true);
-    }
-    ui->comboBoxTaille->setModel(modelTaille);
-    ui->comboBoxTaille->setModelColumn(1);
+
+    //Categorie
+    modelCategorie.setQuery("select numCat,libCat from Categorie");
+    ui->comboBoxCat->setModel(&modelCategorie);
+    ui->comboBoxCat->setModelColumn(1);
 }
 
 void BDM::on_pushButtonNewCli_clicked()
@@ -163,14 +149,17 @@ void BDM::on_pushButtonNewCli_clicked()
         if(formNewCli->exec()==QDialog::Accepted)
         {
             qDebug()<<"Ajout d'un nouveau client";
+
             //enregistrement du newCli
             QSqlRecord recordClient=modelClient->record();
 
+            //affectation des champs aux lineEdit correspondantes
             recordClient.setValue("numCli",formNewCli->ui->lineEditIDNew->text().toInt());
             recordClient.setValue("libCli",formNewCli->ui->lineEditNomNew->text());
             recordClient.setValue("melCli",formNewCli->ui->lineEditMelNew->text());
             recordClient.setValue("telECli",formNewCli->ui->lineEditTelFNew->text());
             recordClient.setValue("telPCli",formNewCli->ui->lineEditTelPNew->text());
+
             if (modelClient->insertRecord(-1,recordClient))
             {
                 ui->statusBar->showMessage("Client ajouté avec succés",3000);
@@ -181,7 +170,7 @@ void BDM::on_pushButtonNewCli_clicked()
             }
             else
             {
-                //QString erreurSql=Panier.lastError().
+                //QString erreurSql=BDM.lastError();
             }
         }
         else
@@ -189,6 +178,7 @@ void BDM::on_pushButtonNewCli_clicked()
             qDebug()<<"Pas d'ajout";
         }
 }
+
 void BDM::rechercheClient()
 {
     QString where="";
@@ -218,52 +208,254 @@ void BDM::rechercheClient()
     modelRecherche.setQuery(texteReq);
 }
 
-
 void BDM::on_pushButtonAjoutProd_clicked()
 {
+    //initialisation de la variable
     QSqlRecord newProd;
+
+    //insertion de la variable dans le modele
     modelProduit->insertRecord(-1,newProd);
+
+    //création de la requete
     QSqlQuery maRequete("select max(numProd)+1 from Produit");
     maRequete.next();
     int numeroProdOk=maRequete.value(0).toInt();
     newProd.setValue("numProd",numeroProdOk);
 }
+
 void BDM::on_radioButtonTout_clicked()
 {
+    //création de la requete
     modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client");
+
+    //application du modele au tableView
     ui->tableViewCli->setModel(&modelClientRecap);
+
+    //nomination des colonne
     modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
     modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
     modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
     modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+
+        ui->comboBoxCli->setEnabled(false);
+        ui->pushButtonActCli->setEnabled(false);
+        ui->pushButtonDesactCli->setEnabled(false);
 }
 
 void BDM::on_radioButtonActif_clicked()
 {
+    //création de la requete
     modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client where typCli=1");
+
+    //application du modele au tableView
     ui->tableViewCli->setModel(&modelClientRecap);
+
+    //nomination des colonne
     modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
     modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
     modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
     modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+
+    //disable->enable
+    ui->comboBoxCli->setEnabled(true);
+    ui->pushButtonDesactCli->setEnabled(true);
+    ui->pushButtonActCli->setEnabled(false);
+    ui->comboBoxCli->setModel(&modelClientRecap);
+    ui->comboBoxCli->setModelColumn(1);
 }
 
 void BDM::on_radioButtonPassif_clicked()
 {
+    //création de la requete
     modelClientRecap.setQuery("select numCli,libCli,telECli,telPCli,melCli from Client where typCli=2");
+
+    //application du modele au tableView
+    ui->tableViewCli->setModel(&modelClientRecap);
+
+    //nomination des colonne
+    modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+
+    //disable->enable
+    ui->comboBoxCli->setEnabled(true);
+    ui->pushButtonActCli->setEnabled(true);
+    ui->pushButtonDesactCli->setEnabled(false);
+    ui->comboBoxCli->setModel(&modelClientRecap);
+    ui->comboBoxCli->setModelColumn(1);
+}
+
+void BDM::on_pushButtonSupprPanierProd_clicked()
+{
+    //récupération de la ligne
+    int noLineSelect=ui->tableWidgetProduitLoc->currentRow();
+
+    //suppression
+    ui->tableWidgetProduitLoc->removeRow(noLineSelect);
+}
+
+void BDM::on_comboBoxCliLoc_activated(const QString &arg1)
+{
+    //affichage de l'id
+    ui->comboBoxCliLoc->setModelColumn(0);
+
+    //preparation de la requete
+    QSqlQuery req;
+    req.prepare("select Location.numProd,libProd,priProd from Produit Natural join Location where numCli=:id");
+        req.bindValue(":id", ui->comboBoxCliLoc->currentText().toInt());
+        req.exec();
+
+    //execution de la requete par le modele
+    modelProdLoc.setQuery(req);
+
+    //application du modele au tableView
+    ui->tableViewProdLoc->setModel(&modelProdLoc);
+
+    //nomination des colonnes
+    modelProdLoc.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelProdLoc.setHeaderData(1, Qt::Horizontal, tr("Désignation"));
+    modelProdLoc.setHeaderData(2, Qt::Horizontal, tr("Valeur"));
+
+    //affichage du nom
+    ui->comboBoxCliLoc->setModelColumn(1);
+
+    //redimention
+    ui->tableViewProdLoc->resizeColumnsToContents();
+}
+
+void BDM::on_comboBoxCat_activated(const QString &arg1)
+{
+    ui->pushButtonAjoutPanierProd->setEnabled(true);
+    ui->pushButtonEnregistrer->setEnabled(true);
+    //affichage du nom
+    ui->comboBoxCat->setModelColumn(1);
+
+    //affichage de l'id
+    ui->comboBoxCat->setModelColumn(0);
+
+    //requete
+    QSqlQuery reqProd;
+    reqProd.prepare("select numProd,libProd from Produit where catProd=:id");
+
+    //récupération de l'id dans la varianble
+        reqProd.bindValue(":id", ui->comboBoxCat->currentText().toInt());
+
+        //execution
+        reqProd.exec();
+    modelPro.setQuery(reqProd);
+
+    //récupétation et affichage du resultat dans la combobox adéquat
+    ui->comboBoxProd->setModel(&modelPro);
+    ui->comboBoxProd->setModelColumn(1);
+    //réaffichage du nom
+    ui->comboBoxCat->setModelColumn(1);
+
+    QString cat=ui->comboBoxCat->currentText();
+    if (cat=="Maillot")
+    {//si categorie="Maillot"
+    ui->comboBoxTaille->setEnabled(true);//combobox active
+
+    modelTaille=new QSqlTableModel(this);
+    modelTaille->setTable("Taille");
+    modelTaille->setEditStrategy(QSqlTableModel::OnRowChange);
+    modelTaille->select();
+    ui->comboBoxTaille->setModel(modelTaille);
+    ui->comboBoxTaille->setModelColumn(1);
+    }
+    else
+    {//sinon
+    ui->comboBoxTaille->setEnabled(false);//passive
+    }
+}
+
+void BDM::on_pushButtonAjoutPanierProd_clicked()
+{
+    //ne marche pas encore
+    //EN COURS
+    modelLocation=new QSqlTableModel(this);
+    modelLocation->setTable("Location");
+    modelLocation->setEditStrategy(QSqlTableModel::OnRowChange);
+    modelLocation->select();
+    modelLocation->setHeaderData(0, Qt::Horizontal, tr("Désignation"));
+    modelLocation->setHeaderData(1, Qt::Horizontal, tr("Quantité"));
+    modelLocation->setHeaderData(2, Qt::Horizontal, tr("Date Départ"));
+    modelLocation->setHeaderData(3, Qt::Horizontal, tr("Dat Arrivé"));
+    ui->tableWidgetProduitLoc->resizeColumnsToContents();
+    ui->tableWidgetProduitLoc->insertRow(ui->tableWidgetProduitLoc->rowCount());
+    //Designation
+    ui->comboBoxProd->setModelColumn(1);
+    QTableWidgetItem * itemDesProd=new QTableWidgetItem(ui->comboBoxProd->currentText());
+    ui->tableWidgetProduitLoc->setItem(ui->tableWidgetProduitLoc->rowCount()-1,0,itemDesProd);
+    //Quantité
+    QTableWidgetItem * itemQTTProd=new QTableWidgetItem(QString::number(ui->spinBoxQtt->value()));
+    ui->tableWidgetProduitLoc->setItem(ui->tableWidgetProduitLoc->rowCount()-1,1,itemQTTProd);
+    //Taille
+    QTableWidgetItem * itemTail=new QTableWidgetItem(ui->comboBoxTaille->currentText());
+    ui->tableWidgetProduitLoc->setItem(ui->tableWidgetProduitLoc->rowCount()-1,2,itemTail);
+    //date départ
+    QTableWidgetItem * itemDD=new QTableWidgetItem(ui->dateEditDepart->text());
+    ui->tableWidgetProduitLoc->setItem(ui->tableWidgetProduitLoc->rowCount()-1,3,itemDD);
+    //date arrivé
+    QTableWidgetItem * itemDA=new QTableWidgetItem(ui->dateEditArrive->text());
+    ui->tableWidgetProduitLoc->setItem(ui->tableWidgetProduitLoc->rowCount()-1,4,itemDA);
+}
+
+void BDM::on_pushButtonActCli_clicked()
+{
+    //ne marche pas encore
+
+    ui->comboBoxCli->setModelColumn(0);
+    QSqlQuery reqDesact;
+    reqDesact.prepare("update Client set typCli=1 where numCli=:id");
+        reqDesact.bindValue(":id", ui->comboBoxCli->currentText().toInt());
+        reqDesact.exec();
+    //application du modele à la tableView
     ui->tableViewCli->setModel(&modelClientRecap);
     modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
     modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
     modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
     modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
     modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+    ui->comboBoxCli->setModelColumn(1);
 }
-//ne marche pas encore
+
 void BDM::on_pushButtonDesactCli_clicked()
 {
-    int talcanInt = ui->tableViewCli->selectionModel()->currentIndex().row();
-    modelClientRecap.setQuery("update Client set typCli=2 where numCli="+talcanInt);
+    //ne marche pas encore
+    ui->comboBoxCli->setModelColumn(0);
+    //nouvelle version
+    //preparation de la requete
+    QSqlQuery reqDesact;
+    reqDesact.prepare("update Client set typCli=2 where numCli=:id");
+        reqDesact.bindValue(":id", ui->comboBoxCli->currentText().toInt());
+        reqDesact.exec();
+
     ui->tableViewCli->setModel(&modelClientRecap);
+    modelClientRecap.setHeaderData(0, Qt::Horizontal, tr("Numéro"));
+    modelClientRecap.setHeaderData(1, Qt::Horizontal, tr("Société"));
+    modelClientRecap.setHeaderData(2, Qt::Horizontal, tr("Téléphone fixe"));
+    modelClientRecap.setHeaderData(3, Qt::Horizontal, tr("Portable"));
+    modelClientRecap.setHeaderData(4, Qt::Horizontal, tr("Adresse mail"));
+    ui->comboBoxCli->setModelColumn(1);
+}
+
+void BDM::on_pushButtonEnregistrer_clicked()
+{
+    //ne marche pas encore
+    QStringList listeValues;
+    QModelIndex index=ui->tableViewRecherche->selectionModel()->currentIndex();
+    int noLigne=ui->tableViewRecherche->selectionModel()->currentIndex().row();
+    index=index.sibling(noLigne,0);
+    QVariant numeroClient=index.data();
+    listeValues.append(numeroClient.toString());
+    QString reqCommande="INSERT INTO Location(,dateCom,numCli) values ("+listeValues.join(",")+")";
+}
+
+void BDM::on_pushButtonRendu_clicked()
+{
+
 }
