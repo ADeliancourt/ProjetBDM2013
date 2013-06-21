@@ -29,6 +29,8 @@ private slots:
 
     void rechercheClient();
 
+    void preparationLoc();
+
     void on_pushButtonAjoutProd_clicked();
 
     void on_radioButtonTout_clicked();
@@ -49,10 +51,15 @@ private slots:
 
     void on_pushButtonRendu_clicked();
 
-    void on_comboBoxCliLoc_activated(const QString &arg1);
+    void on_comboBoxCliLoc_activated();
 
-    void on_comboBoxCat_activated(const QString &arg1);
+    void on_comboBoxCat_activated();
 
+    void on_radioButtonPartiel_clicked();
+
+    void on_radioButtonTotal_clicked();
+
+    void on_tableViewProdLoc_clicked();
 private:
     Ui::BDM *ui;
     QSqlTableModel * modelLocation;
